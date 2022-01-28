@@ -44,4 +44,13 @@ def make_shops(shop_config):
     return (left_shop, right_shop)
 
 
-event_checks(config["probablities"])
+left_shop = make_shops(config["shops"])[0]
+print(left_shop)
+print("PESTS ARE COMING")
+pests(left_shop)
+print(left_shop)
+print("SUMMONING THE INSPECTOR")
+inspector(left_shop)
+print(left_shop)
+
+# event_checks(config["probablities"])
