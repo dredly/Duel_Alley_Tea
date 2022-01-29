@@ -11,7 +11,7 @@ from pygame.locals import (
 )
 
 FPS = 60
-SPEED = 4
+SPEED = 8
 FramePerSec = pygame.time.Clock()
 
 BLACK = (0, 0, 0)
@@ -28,7 +28,7 @@ class Sink(pygame.sprite.Sprite):
         super(Sink, self).__init__()
         self.surf = pygame.Surface((5, 100), pygame.SRCALPHA)
         self.rect_left = self.surf.get_rect()
-        self.rect_left.move_ip(0, 500)
+        self.rect_left.move_ip(5, 500)
         self.rect_right = self.surf.get_rect()
         self.rect_right.move_ip(1275, 500)
         leak_transform = (200, 130)
@@ -49,7 +49,7 @@ class Sink(pygame.sprite.Sprite):
 
     def leak_right(self, surface):
         global leak_count
-        if leak_count + 1 >= 60:
+        if leak_count + 1 >= FPS:
             leak_count = 0
         surface.blit(self.leaking[int(leak_count//7.5)], self.leaking_rect_right)
         leak_count += 1
@@ -57,7 +57,7 @@ class Sink(pygame.sprite.Sprite):
     
     def leak_left(self, surface):
         global leak_count
-        if leak_count + 1 >= 60:
+        if leak_count + 1 >= FPS:
             leak_count = 0
         surface.blit(self.leaking_left[int(leak_count//7.5)], self.leaking_rect_left)
         leak_count += 1
@@ -294,7 +294,7 @@ if __name__ == '__main__':
         
         check_time()
         screen.fill(BLACK)
-        screen.blit(pygame.transform.smoothscale(pygame.image.load("Images\\backgroundtest5.png").convert(), (1280, 720)), (0, 0))
+        screen.blit(pygame.transform.smoothscale(pygame.image.load("Images\\backgroundtest6.png").convert(), (1280, 720)), (0, 0))
         floor.draw(screen)
         front_wall.draw(screen)
         back_wall.draw(screen)
@@ -319,11 +319,10 @@ if __name__ == '__main__':
         player_right.update_right()
         
         #Interactions
-        if cashregister.rect_left.colliderect(player_left.rect):
+        if sink.rect_left.colliderect(player_left.rect):
             pass
-        if cashregister.rect_right.colliderect(player_right.rect):
+        if sink.rect_right.colliderect(player_right.rect):
             pass
-
 
         # Exceptions
         if not floor.rect_left.colliderect(player_left.rect):

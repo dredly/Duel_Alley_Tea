@@ -12,8 +12,8 @@ config = {
     },
     "probabilities": {
         "leak": [0.03, leak],
-        "pests": [0.00, pests],
-        "inspector": [0.5, inspector],
+        "pests": [0.5, pests],
+        "inspector": [0.01, inspector],
         "customer": [0.4, customer],
     },
     #1137, 427 - right
