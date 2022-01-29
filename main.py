@@ -9,17 +9,17 @@ FramePerSec = pygame.time.Clock()
 
 BLACK = (0, 0, 0)
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 720
 
 walk_count = 0
 
 class TeaShop(pygame.sprite.Sprite):
     def __init__(self):
         super(TeaShop, self).__init__()
-        self.surf = pygame.transform.scale(pygame.image.load("Images\\paint-background.png").convert(), (800, 400))
+        self.surf = pygame.transform.scale(pygame.image.load("Images\\paint-background.png").convert(), (1280, 720))
         self.rect = self.surf.get_rect()
-        self.rect.move_ip(0, 100)
+        # self.rect.move_ip(0, 100)
 
     def draw(self, surface):
         surface.blit(self.surf, self.rect)
@@ -29,9 +29,9 @@ class Floor(pygame.sprite.Sprite):
     def __init__(self):
         super(Floor, self).__init__()
         self.surf = pygame.Surface((800, 10))
-        self.surf.fill((200, 0, 0))
+        # self.surf.fill((200, 0, 0))
         self.rect = self.surf.get_rect()
-        self.rect.move_ip(0, 416)
+        self.rect.move_ip(0, 569)
 
     def draw(self, surface):
         surface.blit(self.surf, self.rect)
@@ -40,10 +40,10 @@ class Floor(pygame.sprite.Sprite):
 class FrontWall(pygame.sprite.Sprite):
     def __init__(self):
         super(FrontWall, self).__init__()
-        self.surf = pygame.Surface((10, 600))
-        self.surf.fill((200, 0, 0))
+        self.surf = pygame.Surface((10, 600), pygame.SRCALPHA)
+        # self.surf.fill((200, 0, 0))
         self.rect = self.surf.get_rect()
-        self.rect.move_ip(340, 0)
+        self.rect.move_ip(544, 0)
 
     def draw(self, surface):
         surface.blit(self.surf, self.rect)
@@ -65,6 +65,7 @@ class Player(pygame.sprite.Sprite):
         self.standing_left = standing_left
         self.standing_right = standing_right
         self.rect = self.standing_left.get_rect()
+        self.rect.move_ip(0, 500)
         self.last_look = 'right'
 
     def update(self):
@@ -130,7 +131,7 @@ while running:
     front_wall.draw(screen)
     player_left.update()
     if not floor.rect.colliderect(player_left.rect):
-        player_left.rect.move_ip(0, 5)    
+        player_left.rect.move_ip(0, 3)    
     if front_wall.rect.colliderect(player_left.rect):
         player_left.rect.move_ip(-2, 0)
     player_left.draw(screen)
