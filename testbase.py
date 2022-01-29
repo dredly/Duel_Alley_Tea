@@ -19,13 +19,11 @@ config = {
 }
 
 
-def event_checks(shops, probabilities):
-    for shop in shops:
-        print(shop.shop_name)
+def event_checks(shop, probabilities):
+    for ev, prob in probabilities.items():
         rand = random.random()
-        for ev, prob in probabilities.items():
-            if prob[0] > rand:
-                prob[1](shop)
+        if prob[0] > rand:
+            prob[1](shop)
 
 
 def make_shops(shop_config):
@@ -58,7 +56,8 @@ def make_shops(shop_config):
 # customer(left_shop)
 # print(left_shop)
 
-shops = make_shops(config["shops"])
-for i in range(50):
-    print(f"Round {i}")
-    event_checks(shops, config["probablities"])
+if __name__ == '__main__':
+    shops = make_shops(config["shops"])
+    for i in range(50):
+        print(f"Round {i}")
+        event_checks(shops, config["probablities"])
