@@ -1,4 +1,6 @@
+from turtle import Screen
 import pygame
+from external_events import leak
 from testbase import config, make_shops, event_checks
 from pygame import K_LEFT, K_RIGHT, KEYDOWN, QUIT, K_a, K_d
 from pygame.locals import (
@@ -16,6 +18,76 @@ SCREEN_HEIGHT = 720
 
 walk_count_left = 0
 walk_count_right = 0
+leak_count = 0
+
+class Sink(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Sink, self).__init__()
+        self.surf = pygame.Surface((5, 100), pygame.SRCALPHA)
+        self.rect_left = self.surf.get_rect()
+        self.rect_left.move_ip(0, 500)
+        self.rect_right = self.surf.get_rect()
+        self.rect_right.move_ip(1275, 500)
+        leak_transform = (200, 130)
+        leaking_1 = pygame.transform.scale(pygame.image.load("Images\\leaking-1.png"), leak_transform)
+        leaking_2 = pygame.transform.scale(pygame.image.load("Images\\leaking-2.png"), leak_transform)
+        leaking_1_left = pygame.transform.scale(pygame.image.load("Images\\leaking-1-left.png"), leak_transform)
+        leaking_2_left = pygame.transform.scale(pygame.image.load("Images\\leaking-2-left.png"), leak_transform)
+        self.leaking = [leaking_1, leaking_2, leaking_1, leaking_2, leaking_1, leaking_2, leaking_1, leaking_2]
+        self.leaking_left = [leaking_1_left, leaking_2_left, leaking_1_left, leaking_2_left, leaking_1_left, leaking_2_left, leaking_1_left, leaking_2_left]
+        self.leaking_rect_left = leaking_1_left.get_rect()
+        self.leaking_rect_right = leaking_1_left.get_rect()
+        self.leaking_rect_left.move_ip(0, 500)
+        self.leaking_rect_right.move_ip(1155, 520)
+
+    def draw(self, surface):
+        surface.blit(self.surf, self.rect_left)
+        surface.blit(self.surf, self.rect_right)
+
+    def leak_right(self, surface):
+        global leak_count
+        if leak_count + 1 >= 60:
+            leak_count = 0
+        surface.blit(self.leaking[int(leak_count//7.5)], self.leaking_rect_right)
+        leak_count += 1
+
+    
+    def leak_left(self, surface):
+        global leak_count
+        if leak_count + 1 >= 60:
+            leak_count = 0
+        surface.blit(self.leaking_left[int(leak_count//7.5)], self.leaking_rect_left)
+        leak_count += 1
+
+
+class Phone(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Phone, self).__init__()
+        self.surf = pygame.Surface((2, 100), pygame.SRCALPHA)
+        self.rect_left = self.surf.get_rect()
+        self.rect_left.move_ip(249, 474)
+        self.rect_right = self.surf.get_rect()
+        self.rect_right.move_ip(1028, 474)
+
+    def draw(self, surface):
+        surface.blit(self.surf, self.rect_left)
+        surface.blit(self.surf, self.rect_right)
+
+
+class CashRegister():
+    def __init__(self):
+        super(CashRegister, self).__init__()
+        self.surf = pygame.Surface((2, 100), pygame.SRCALPHA)
+        self.rect_left = self.surf.get_rect()
+        self.rect_left.move_ip(483, 474)
+        self.rect_right = self.surf.get_rect()
+        self.rect_right.move_ip(793, 474)
+
+    def draw(self, surface):
+        surface.blit(self.surf, self.rect_left)
+        surface.blit(self.surf, self.rect_right)
+
+
 class Floor(pygame.sprite.Sprite):
     def __init__(self):
         super(Floor, self).__init__()
@@ -45,6 +117,22 @@ class FrontWall(pygame.sprite.Sprite):
         surface.blit(self.surf_left, self.rect_left)
         surface.blit(self.surf_right, self.rect_right)
 
+
+class BackWall(pygame.sprite.Sprite):
+    def __init__(self):
+        super(BackWall, self).__init__()
+        self.surf_left = pygame.Surface((1, 720), pygame.SRCALPHA)
+        self.rect_left = self.surf_left.get_rect()
+        self.rect_left.move_ip(0, 0)
+        self.surf_right = pygame.Surface((10, 720), pygame.SRCALPHA)
+        self.rect_right = self.surf_right.get_rect()
+        self.rect_right.move_ip(1279, 0)
+
+    def draw(self, surface):
+        surface.blit(self.surf_left, self.rect_left)
+        surface.blit(self.surf_right, self.rect_right)
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
@@ -54,20 +142,23 @@ class Player(pygame.sprite.Sprite):
         running_1_right = pygame.transform.scale(pygame.image.load("Images\\running-1-right.png"), self.transform)
         running_2_left = pygame.transform.scale(pygame.image.load("Images\\running-2.png"), self.transform)
         running_2_right = pygame.transform.scale(pygame.image.load("Images\\running-2-right.png"), self.transform)
-        standing_left = pygame.transform.scale(pygame.image.load("Images\\standing.png"), self.transform)
-        standing_right = pygame.transform.scale(pygame.image.load("Images\\standing-right.png"), self.transform)
+        standing_1_left = pygame.transform.scale(pygame.image.load("Images\\standing-1.png"), self.transform)
+        standing_1_right = pygame.transform.scale(pygame.image.load("Images\\standing-1-right.png"), self.transform)
+        standing_2_left = pygame.transform.scale(pygame.image.load("Images\\standing-2.png"), self.transform)
+        standing_2_right = pygame.transform.scale(pygame.image.load("Images\\standing-2-right.png"), self.transform)
         self.running_left = [running_1_left, running_2_left, running_1_left, running_2_left, running_1_left, running_2_left, running_1_left, running_2_left]
         self.running_right = [running_1_right, running_2_right, running_1_right, running_2_right, running_1_right, running_2_right, running_1_right, running_2_right]
-        self.standing_left = standing_left
-        self.standing_right = standing_right
-        self.rect = self.standing_left.get_rect()
+        self.standing_left = [standing_1_left, standing_2_left, standing_1_left, standing_2_left, standing_1_left, standing_2_left, standing_1_left, standing_2_left]
+        self.standing_right = [standing_1_right, standing_2_right, standing_1_right, standing_2_right, standing_1_right, standing_2_right, standing_1_right, standing_2_right]
+        self.rect = self.standing_left[0].get_rect()
+        
 
     def place_right(self):
-        self.rect.move_ip(1180, 460)
+        self.rect.move_ip(1180, 500)
         self.last_look = 'left'
 
     def place_left(self):
-        self.rect.move_ip(0, 460)
+        self.rect.move_ip(0, 500)
         self.last_look = 'right'
 
     def update_left(self):
@@ -101,10 +192,11 @@ class Player(pygame.sprite.Sprite):
             self.last_look = 'right'
         else:
             if self.last_look == 'right':
-                surface.blit(self.standing_right, self.rect)
+                surface.blit(self.standing_right[int(walk_count_left//7.5)], self.rect)
+                walk_count_left += 1
             elif self.last_look == 'left':
-                surface.blit(self.standing_left, self.rect)
-            walk_count_left = 0
+                surface.blit(self.standing_left[int(walk_count_left//7.5)], self.rect)
+                walk_count_left += 1
 
     def draw_right(self, surface):
             global walk_count_right
@@ -123,10 +215,11 @@ class Player(pygame.sprite.Sprite):
                 self.last_look = 'right'
             else:
                 if self.last_look == 'right':
-                    surface.blit(self.standing_right, self.rect)
+                    surface.blit(self.standing_right[int(walk_count_right//7.5)], self.rect)
+                    walk_count_right += 1
                 elif self.last_look == 'left':
-                    surface.blit(self.standing_left, self.rect)
-                walk_count_right = 0
+                    surface.blit(self.standing_left[int(walk_count_right//7.5)], self.rect)
+                    walk_count_right += 1
 
 
 if __name__ == '__main__':           
@@ -142,7 +235,11 @@ if __name__ == '__main__':
     player_right = Player()
     player_right.place_right()
     floor = Floor()
+    sink = Sink()
+    phone = Phone()
+    cashregister = CashRegister()
     front_wall = FrontWall()
+    back_wall = BackWall()
     frame_count = 0
 
     def check_time():
@@ -152,8 +249,6 @@ if __name__ == '__main__':
             event_checks(shops[0], config["probablities"])
             event_checks(shops[1], config["probablities"])
             frame_count = 0
-
-    screen.blit(player_left.standing_left, player_left.rect)
 
     pygame.display.update()
 
@@ -168,11 +263,29 @@ if __name__ == '__main__':
         
         check_time()
         screen.fill(BLACK)
-        screen.blit(pygame.transform.smoothscale(pygame.image.load("Images\\backgroundtest3.png").convert(), (1280, 720)), (0, 0))
+        screen.blit(pygame.transform.smoothscale(pygame.image.load("Images\\backgroundtest4.png").convert(), (1280, 720)), (0, 0))
         floor.draw(screen)
         front_wall.draw(screen)
+        back_wall.draw(screen)
+        sink.draw(screen)
+        phone.draw(screen)
+        cashregister.draw(screen)
         player_left.update_left()
         player_right.update_right()
+
+        #Interactions
+        if phone.rect_left.colliderect(player_left.rect):
+            sink.leak_left(screen)
+        if phone.rect_right.colliderect(player_right.rect):
+            sink.leak_right(screen)
+        if cashregister.rect_left.colliderect(player_left.rect):
+            pass
+        if cashregister.rect_right.colliderect(player_right.rect):
+            pass
+        if sink.rect_left.colliderect(player_left.rect):
+            pass
+        if sink.rect_right.colliderect(player_right.rect):
+            pass
 
         # Exceptions
         if not floor.rect_left.colliderect(player_left.rect):
@@ -183,6 +296,10 @@ if __name__ == '__main__':
             player_left.rect.move_ip(-SPEED, 0)
         if front_wall.rect_right.colliderect(player_right.rect):
             player_right.rect.move_ip(SPEED, 0)
+        if back_wall.rect_left.colliderect(player_left.rect):
+            player_left.rect.move_ip(SPEED, 0)
+        if back_wall.rect_right.colliderect(player_right.rect):
+            player_right.rect.move_ip(-SPEED, 0)
         player_left.draw_left(screen)
         player_right.draw_right(screen)
 
