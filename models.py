@@ -1,12 +1,13 @@
 class Shop:
-    def __init__(
-        self, shop_name, customer_satisfaction, moneys, cleanliness, hygiene_score
-    ):
+    def __init__(self, shop_name, moneys, cleanliness, hygiene_score, probabilities):
         self.shop_name = shop_name
-        self.customer_satisfaction = customer_satisfaction
+        self.customer_satisfaction = []
         self.moneys = moneys
         self.cleanliness = cleanliness
         self.hygiene_score = hygiene_score
+        self.is_infested = False
+        self.is_cleaning = False
+        self.probabilities = probabilities
         self.img_file_names = {
             "cleanliness_overlay": f"cleanliness_level_{self.cleanliness}.png",
             "leak_overlay": None,
@@ -25,5 +26,28 @@ class Shop:
         ] = f"hygiene_score_{self.hygiene_score}.png"
         print("UPDATING HYGIENE SCORE")
 
+    def leak(self):
+        self.img_file_names["leak_overlay"] = "leak.png"
+
+    def fix_leak(self):
+        self.img_file_names["leak_overlay"] = None
+
+    def start_cleaning(self):
+        is_cleaning = True
+
+    def stop_cleaning(self):
+        is_cleaning = False
+
+    def call_pest_control(self):
+        self.moneys -= 500
+        self.is_infested = False
+
+    def avg_rating(self):
+        if len(self.customer_satisfaction) == 0:
+            return "No ratings"
+        else:
+            avg = sum(self.customer_satisfaction) / len(self.customer_satisfaction)
+            return round(avg)
+
     def __repr__(self):
-        return f"------\nShop: {self.shop_name}. Current moneys: ${self.moneys}\nCustomer satisfaction: {self.customer_satisfaction}\nCleanliness: {self.cleanliness}, hygiene score: {self.hygiene_score}\n-----"
+        return f"------\nShop: {self.shop_name}. Current moneys: ${self.moneys}\nCustomer satisfaction: {self.customer_satisfaction}, average rating: {self.avg_rating()}\nCleanliness: {self.cleanliness}, hygiene score: {self.hygiene_score}\n-----"
