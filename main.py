@@ -229,7 +229,8 @@ if __name__ == '__main__':
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-    shops = make_shops(config["shops"])
+    shops = make_shops(config["shops"], config["probabilities"])
+    
     player_left = Player()
     player_left.place_left()
     player_right = Player()
@@ -246,8 +247,8 @@ if __name__ == '__main__':
         global frame_count
         frame_count += 1
         if frame_count + 1 >= FPS:
-            event_checks(shops[0], config["probablities"])
-            event_checks(shops[1], config["probablities"])
+            event_checks(shops[0])
+            event_checks(shops[1])
             frame_count = 0
 
     pygame.display.update()
@@ -263,21 +264,27 @@ if __name__ == '__main__':
         
         check_time()
         screen.fill(BLACK)
-        screen.blit(pygame.transform.smoothscale(pygame.image.load("Images\\backgroundtest4.png").convert(), (1280, 720)), (0, 0))
+        screen.blit(pygame.transform.smoothscale(pygame.image.load("Images\\backgroundtest5.png").convert(), (1280, 720)), (0, 0))
         floor.draw(screen)
         front_wall.draw(screen)
         back_wall.draw(screen)
         sink.draw(screen)
         phone.draw(screen)
         cashregister.draw(screen)
+        screen.blit(pygame.image.load(shops[1].img_file_names["cleanliness_overlay"]), (757, 284))
+        screen.blit(pygame.image.load(shops[0].img_file_names["cleanliness_overlay"]), (-263, 284))
+        hygiene_rating_1 = pygame.transform.smoothscale(pygame.image.load(shops[1].img_file_names["hygiene_score_image"]), (120, 80))
+        screen.blit(hygiene_rating_1, (700, 240))
+        hygiene_rating_0 = pygame.transform.smoothscale(pygame.image.load(shops[0].img_file_names["hygiene_score_image"]), (120, 80))
+        screen.blit(hygiene_rating_0, (460, 240))
         player_left.update_left()
         player_right.update_right()
 
         #Interactions
         if phone.rect_left.colliderect(player_left.rect):
-            sink.leak_left(screen)
+            pass
         if phone.rect_right.colliderect(player_right.rect):
-            sink.leak_right(screen)
+            pass
         if cashregister.rect_left.colliderect(player_left.rect):
             pass
         if cashregister.rect_right.colliderect(player_right.rect):
