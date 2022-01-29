@@ -1,9 +1,7 @@
 class Shop:
-    def __init__(
-        self, shop_name, customer_satisfaction, moneys, cleanliness, hygiene_score
-    ):
+    def __init__(self, shop_name, moneys, cleanliness, hygiene_score):
         self.shop_name = shop_name
-        self.customer_satisfaction = customer_satisfaction
+        self.customer_satisfaction = []
         self.moneys = moneys
         self.cleanliness = cleanliness
         self.hygiene_score = hygiene_score
@@ -31,5 +29,18 @@ class Shop:
     def fix_leak(self):
         self.img_file_names["leak_overlay"] = None
 
+    def clean(self, clean_amount):
+        if self.cleanliness + clean_amount > 10:
+            self.change_cleanliness(10)
+        else:
+            self.change_cleanliness(self.cleanliness + clean_amount)
+
+    def avg_rating(self):
+        if len(self.customer_satisfaction) == 0:
+            return "No ratings"
+        else:
+            avg = sum(self.customer_satisfaction) / len(self.customer_satisfaction)
+            return round(avg)
+
     def __repr__(self):
-        return f"------\nShop: {self.shop_name}. Current moneys: ${self.moneys}\nCustomer satisfaction: {self.customer_satisfaction}\nCleanliness: {self.cleanliness}, hygiene score: {self.hygiene_score}\n-----"
+        return f"------\nShop: {self.shop_name}. Current moneys: ${self.moneys}\nCustomer satisfaction: {self.customer_satisfaction}, average rating: {self.avg_rating()}\nCleanliness: {self.cleanliness}, hygiene score: {self.hygiene_score}\n-----"

@@ -30,14 +30,12 @@ def event_checks(shop, probabilities):
 def make_shops(shop_config):
     left_shop = Shop(
         shop_name="Shop on left",
-        customer_satisfaction=shop_config["customer_satisfaction"],
         moneys=shop_config["moneys"],
         cleanliness=shop_config["cleanliness"],
         hygiene_score=shop_config["hygiene_score"],
     )
     right_shop = Shop(
         shop_name="Shop on right",
-        customer_satisfaction=shop_config["customer_satisfaction"],
         moneys=shop_config["moneys"],
         cleanliness=shop_config["cleanliness"],
         hygiene_score=shop_config["hygiene_score"],
@@ -59,7 +57,9 @@ def make_shops(shop_config):
 
 # Testing the event triggering
 shops = make_shops(config["shops"])
+print(shops[0])
 for i in range(50):
     print(f"Round {i}")
     event_checks(shops[0], config["probablities"])
     event_checks(shops[1], config["probablities"])
+print(shops[0])

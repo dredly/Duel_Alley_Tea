@@ -26,6 +26,7 @@ def inspector(shop):
 
 def customer(shop):
     # random comment
+    print("Here comes a customer. Yay!")
     shop.moneys += 2
     rand = random.random()
     # Chance of customer making the shop dirtier
@@ -38,6 +39,14 @@ def customer(shop):
     rand2 = random.random()
     # Chance of customer leaving a review
     if rand2 < 0.2:
-        print("Leaving a review")
-
-    print("Here comes a customer. Yay!")
+        if shop.cleanliness - 2 < 0:
+            min_review = 0
+        else:
+            min_review = shop.cleanliness - 2
+        if shop.cleanliness + 2 > 10:
+            max_review = 10
+        else:
+            max_review = shop.cleanliness + 2
+        new_review = random.randint(min_review, max_review)
+        shop.customer_satisfaction.append(new_review)
+        print(f"\nReview score: {new_review}\n")
