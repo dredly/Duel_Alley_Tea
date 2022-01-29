@@ -24,6 +24,7 @@ def inspector(shop):
 
 
 def customer(shop):
+    # random comment
     shop.moneys += 2
     rand = random.random()
     if rand < 0.2:
