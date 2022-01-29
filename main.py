@@ -1,5 +1,3 @@
-from ast import walk
-from turtle import Screen
 import pygame
 from pygame import RLEACCEL, KEYDOWN, QUIT, K_a, K_d, K_s, K_w
 from pygame.locals import (
