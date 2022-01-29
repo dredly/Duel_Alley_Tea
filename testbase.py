@@ -19,11 +19,13 @@ config = {
 }
 
 
-def event_checks(probabilities):
-    rand = random.random()
-    for ev, prob in probabilities.items():
-        if prob[0] > rand:
-            prob[1]()
+def event_checks(shops, probabilities):
+    for shop in shops:
+        print(shop.shop_name)
+        rand = random.random()
+        for ev, prob in probabilities.items():
+            if prob[0] > rand:
+                prob[1](shop)
 
 
 def make_shops(shop_config):
@@ -44,13 +46,19 @@ def make_shops(shop_config):
     return (left_shop, right_shop)
 
 
-left_shop = make_shops(config["shops"])[0]
-print(left_shop)
-print("PESTS ARE COMING")
-pests(left_shop)
-print(left_shop)
-print("SUMMONING THE INSPECTOR")
-inspector(left_shop)
-print(left_shop)
+# left_shop = make_shops(config["shops"])[0]
+# print(left_shop)
+# print("PESTS ARE COMING")
+# pests(left_shop)
+# print(left_shop)
+# print("SUMMONING THE INSPECTOR")
+# inspector(left_shop)
+# print(left_shop)
+# print("Customer coming!")
+# customer(left_shop)
+# print(left_shop)
 
-# event_checks(config["probablities"])
+shops = make_shops(config["shops"])
+for i in range(50):
+    print(f"Round {i}")
+    event_checks(shops, config["probablities"])
