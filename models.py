@@ -7,6 +7,7 @@ class Shop:
         self.hygiene_score = hygiene_score
         self.is_infested = False
         self.is_cleaning = False
+        self.leaking = False
         self.probabilities = probabilities
         self.img_file_names = {
             "cleanliness_overlay": f"so_called_art\\pngs\\cleanliness_level_{self.cleanliness}.png",
@@ -21,22 +22,26 @@ class Shop:
     def update_hygiene_score(self):
         # TODO add bribery
         self.hygiene_score = self.cleanliness // 2
+        if self.hygiene_score == 0:
+            self.hygiene_score = 1
         self.img_file_names[
             "hygiene_score_image"
         ] = f"so_called_art\\pngs\\hygiene_rating_{self.hygiene_score}.png"
-        print("UPDATING HYGIENE SCORE")
+        # print("UPDATING HYGIENE SCORE")
 
     def leak(self):
-        self.img_file_names["leak_overlay"] = "leak.png"
+        self.leaking = True
 
     def fix_leak(self):
-        self.img_file_names["leak_overlay"] = None
+        self.leaking = False
+        self.moneys -= 200
 
     def start_cleaning(self):
-        is_cleaning = True
+        print('Starting to Clean')
+        self.is_cleaning = True
 
     def stop_cleaning(self):
-        is_cleaning = False
+        self.is_cleaning = False
 
     def call_pest_control(self):
         self.moneys -= 500

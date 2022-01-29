@@ -12,7 +12,7 @@ config = {
     },
     "probabilities": {
         "leak": [0.03, leak],
-        "pests": [0.01, pests],
+        "pests": [0.00, pests],
         "inspector": [0.5, inspector],
         "customer": [0.4, customer],
     },
@@ -22,7 +22,7 @@ config = {
 
 
 def event_checks(shop):
-    print(shop.shop_name)
+    # print(shop.shop_name)
     if shop.is_cleaning:
         if shop.cleanliness + 1 > 10:
             shop.change_cleanliness(10)
@@ -75,10 +75,10 @@ def make_shops(shop_config, probabilities):
 # Testing the event triggering
 if  __name__ == "__main__":
     shops = make_shops(config["shops"], config["probabilities"])
-    print(shops[0])
+    # print(shops[0])
     for i in range(100):
         print(f"Round {i}")
         event_checks(shops[0])
         event_checks(shops[1])
-    print(shops)
-    print([shop.probabilities["customer"][0] for shop in shops])
+    # print(shops)
+    # print([shop.probabilities["customer"][0] for shop in shops])

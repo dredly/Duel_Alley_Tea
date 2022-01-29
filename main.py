@@ -1,8 +1,11 @@
+from distutils.ccompiler import show_compilers
+from enum import Flag
+from re import S
 from turtle import Screen
 import pygame
 from external_events import leak
 from testbase import config, make_shops, event_checks
-from pygame import K_LEFT, K_RIGHT, KEYDOWN, QUIT, K_a, K_d
+from pygame import K_DOWN, K_LCTRL, K_LEFT, K_RCTRL, K_RIGHT, K_UP, KEYDOWN, KEYUP, QUIT, K_a, K_d, K_s, K_w
 from pygame.locals import (
     K_ESCAPE
 )
@@ -37,7 +40,7 @@ class Sink(pygame.sprite.Sprite):
         self.leaking_left = [leaking_1_left, leaking_2_left, leaking_1_left, leaking_2_left, leaking_1_left, leaking_2_left, leaking_1_left, leaking_2_left]
         self.leaking_rect_left = leaking_1_left.get_rect()
         self.leaking_rect_right = leaking_1_left.get_rect()
-        self.leaking_rect_left.move_ip(0, 500)
+        self.leaking_rect_left.move_ip(-70, 520)
         self.leaking_rect_right.move_ip(1155, 520)
 
     def draw(self, surface):
@@ -226,6 +229,9 @@ if __name__ == '__main__':
     running = True
 
     pygame.init()
+    pygame.font.init()
+
+    myFont = pygame.font.SysFont("Comc Sans MS", 30)
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -259,6 +265,30 @@ if __name__ == '__main__':
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     running = False
+                elif event.key == K_DOWN:
+                    if sink.rect_right.colliderect(player_right.rect):
+                        shops[1].start_cleaning()
+                elif event.key == K_s:
+                    if sink.rect_left.colliderect(player_left.rect):
+                        shops[0].start_cleaning()
+                elif event.key == K_w:
+                    if phone.rect_left.colliderect(player_left.rect):
+                        shops[0].call_pest_control()
+                elif event.key == K_UP:
+                    if phone.rect_right.colliderect(player_right.rect):
+                        shops[1].call_pest_control()
+                elif event.key == K_RCTRL:
+                    if sink.rect_right.colliderect(player_right.rect):
+                        shops[1].fix_leak()
+                elif event.key == K_LCTRL:
+                    if sink.rect_left.colliderect(player_left.rect):
+                        shops[0].fix_leak()
+                
+            elif event.type == KEYUP:
+                if event.key == K_DOWN:
+                    shops[1].stop_cleaning()
+                elif event.key == K_s:
+                    shops[0].stop_cleaning()
             elif event.type == QUIT:
                 running = False
         
@@ -271,28 +301,29 @@ if __name__ == '__main__':
         sink.draw(screen)
         phone.draw(screen)
         cashregister.draw(screen)
+        if shops[1].leaking:
+            sink.leak_right(screen)
+        if shops[0].leaking:
+            sink.leak_left(screen)
         screen.blit(pygame.image.load(shops[1].img_file_names["cleanliness_overlay"]), (757, 284))
         screen.blit(pygame.image.load(shops[0].img_file_names["cleanliness_overlay"]), (-263, 284))
         hygiene_rating_1 = pygame.transform.smoothscale(pygame.image.load(shops[1].img_file_names["hygiene_score_image"]), (120, 80))
         screen.blit(hygiene_rating_1, (700, 240))
         hygiene_rating_0 = pygame.transform.smoothscale(pygame.image.load(shops[0].img_file_names["hygiene_score_image"]), (120, 80))
         screen.blit(hygiene_rating_0, (460, 240))
+        shop_1_money = myFont.render(f"Moneys: {shops[0].moneys}", False, (0, 0, 0))
+        screen.blit(shop_1_money, (10, 230))
+        shop_2_money = myFont.render(f"Moneys: {shops[1].moneys}", False, (0, 0, 0))
+        screen.blit(shop_2_money, (1133, 230))
         player_left.update_left()
         player_right.update_right()
-
+        
         #Interactions
-        if phone.rect_left.colliderect(player_left.rect):
-            pass
-        if phone.rect_right.colliderect(player_right.rect):
-            pass
         if cashregister.rect_left.colliderect(player_left.rect):
             pass
         if cashregister.rect_right.colliderect(player_right.rect):
             pass
-        if sink.rect_left.colliderect(player_left.rect):
-            pass
-        if sink.rect_right.colliderect(player_right.rect):
-            pass
+
 
         # Exceptions
         if not floor.rect_left.colliderect(player_left.rect):
