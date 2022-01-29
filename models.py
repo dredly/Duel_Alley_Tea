@@ -25,5 +25,11 @@ class Shop:
         ] = f"hygiene_score_{self.hygiene_score}.png"
         print("UPDATING HYGIENE SCORE")
 
+    def leak(self):
+        self.img_file_names["leak_overlay"] = "leak.png"
+
+    def fix_leak(self):
+        self.img_file_names["leak_overlay"] = None
+
     def __repr__(self):
         return f"------\nShop: {self.shop_name}. Current moneys: ${self.moneys}\nCustomer satisfaction: {self.customer_satisfaction}\nCleanliness: {self.cleanliness}, hygiene score: {self.hygiene_score}\n-----"
