@@ -53,12 +53,13 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
         self.run_index = 0
-        running_1_left = pygame.transform.scale(pygame.image.load("Images\\running-1.png"), (50, 50))
-        running_1_right = pygame.transform.scale(pygame.image.load("Images\\running-1-right.png"), (50, 50))
-        running_2_left = pygame.transform.scale(pygame.image.load("Images\\running-2.png"), (50, 50))
-        running_2_right = pygame.transform.scale(pygame.image.load("Images\\running-2-right.png"), (50, 50))
-        standing_left = pygame.transform.scale(pygame.image.load("Images\\standing.png"), (50, 50))
-        standing_right = pygame.transform.scale(pygame.image.load("Images\\standing-right.png"), (50, 50))
+        self.transform = (55, 55)
+        running_1_left = pygame.transform.scale(pygame.image.load("Images\\running-1.png"), self.transform)
+        running_1_right = pygame.transform.scale(pygame.image.load("Images\\running-1-right.png"), self.transform)
+        running_2_left = pygame.transform.scale(pygame.image.load("Images\\running-2.png"), self.transform)
+        running_2_right = pygame.transform.scale(pygame.image.load("Images\\running-2-right.png"), self.transform)
+        standing_left = pygame.transform.scale(pygame.image.load("Images\\standing.png"), self.transform)
+        standing_right = pygame.transform.scale(pygame.image.load("Images\\standing-right.png"), self.transform)
         self.running_left = [running_1_left, running_2_left, running_1_left, running_2_left, running_1_left, running_2_left, running_1_left, running_2_left]
         self.running_right = [running_1_right, running_2_right, running_1_right, running_2_right, running_1_right, running_2_right, running_1_right, running_2_right]
         self.standing_left = standing_left
