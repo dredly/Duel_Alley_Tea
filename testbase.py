@@ -10,12 +10,14 @@ config = {
         "cleanliness": 10,
         "hygiene_score": 5,
     },
-    "probablities": {
+    "probabilities": {
         "leak": [0.03, leak],
         "pests": [0.01, pests],
-        "inspector": [0.01, inspector],
+        "inspector": [0.5, inspector],
         "customer": [0.4, customer],
     },
+    #1137, 427 - right
+
 }
 
 
@@ -71,11 +73,12 @@ def make_shops(shop_config, probabilities):
 # print(left_shop)
 
 # Testing the event triggering
-shops = make_shops(config["shops"], config["probablities"])
-print(shops[0])
-for i in range(100):
-    print(f"Round {i}")
-    event_checks(shops[0])
-    event_checks(shops[1])
-print(shops)
-print([shop.probabilities["customer"][0] for shop in shops])
+if  __name__ == "__main__":
+    shops = make_shops(config["shops"], config["probabilities"])
+    print(shops[0])
+    for i in range(100):
+        print(f"Round {i}")
+        event_checks(shops[0])
+        event_checks(shops[1])
+    print(shops)
+    print([shop.probabilities["customer"][0] for shop in shops])

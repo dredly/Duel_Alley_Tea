@@ -9,21 +9,21 @@ class Shop:
         self.is_cleaning = False
         self.probabilities = probabilities
         self.img_file_names = {
-            "cleanliness_overlay": f"cleanliness_level_{self.cleanliness}.png",
+            "cleanliness_overlay": f"so_called_art\\pngs\\cleanliness_level_{self.cleanliness}.png",
             "leak_overlay": None,
-            "hygiene_score_image": f"hygiene_score_{self.hygiene_score}.png",
+            "hygiene_score_image": f"so_called_art\\pngs\\hygiene_rating_{self.hygiene_score}.png",
         }
 
     def change_cleanliness(self, new_val):
         self.cleanliness = new_val
-        self.img_file_names["cleanliness_overlay"] = f"cleanliness_level_{new_val}.png"
+        self.img_file_names["cleanliness_overlay"] = f"so_called_art\\pngs\\cleanliness_level_{new_val}.png"
 
     def update_hygiene_score(self):
         # TODO add bribery
         self.hygiene_score = self.cleanliness // 2
         self.img_file_names[
-            "hygien_score_images"
-        ] = f"hygiene_score_{self.hygiene_score}.png"
+            "hygiene_score_image"
+        ] = f"so_called_art\\pngs\\hygiene_rating_{self.hygiene_score}.png"
         print("UPDATING HYGIENE SCORE")
 
     def leak(self):
