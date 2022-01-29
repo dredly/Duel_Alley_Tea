@@ -12,10 +12,7 @@ def leak(shop):
 
 def pests(shop):
     # Decrease cleanliness by 4
-    if shop.cleanliness - 4 < 0:
-        shop.change_cleanliness(0)
-    else:
-        shop.change_cleanliness(shop.cleanliness - 4)
+    shop.is_infested = True
     print("THE RATS ARE COMING")
 
 
@@ -36,6 +33,7 @@ def customer(shop):
             shop.change_cleanliness(0)
         else:
             shop.change_cleanliness(shop.cleanliness - 1)
+
     rand2 = random.random()
     # Chance of customer leaving a review
     if rand2 < 0.2:
@@ -49,4 +47,8 @@ def customer(shop):
             max_review = shop.cleanliness + 2
         new_review = random.randint(min_review, max_review)
         shop.customer_satisfaction.append(new_review)
+        customer_likelihood_modifier = (shop.avg_rating() - 5) * 0.08
+        shop.probabilities["customer"][0] = 0.4 + customer_likelihood_modifier
         print(f"\nReview score: {new_review}\n")
+        print(f"\nNew avg score: {shop.avg_rating()}\n")
+        print(f"\nprobability of new customers: {shop.probabilities['customer'][0]}")

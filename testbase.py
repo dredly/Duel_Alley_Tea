@@ -1,5 +1,5 @@
 import random
-
+import copy
 from models import Shop
 from external_events import *
 
@@ -11,34 +11,49 @@ config = {
         "hygiene_score": 5,
     },
     "probablities": {
-        "leak": (0.03, leak),
-        "pests": (0.01, pests),
-        "inspector": (0.01, inspector),
-        "customer": (0.4, customer),
+        "leak": [0.03, leak],
+        "pests": [0.01, pests],
+        "inspector": [0.01, inspector],
+        "customer": [0.4, customer],
     },
 }
 
 
-def event_checks(shop, probabilities):
+def event_checks(shop):
     print(shop.shop_name)
-    for ev, prob in probabilities.items():
+    if shop.is_cleaning:
+        if shop.cleanliness + 1 > 10:
+            shop.change_cleanliness(10)
+        else:
+            shop.change_cleanliness(shop.cleanliness + 1)
+    if shop.is_infested:
+        rand = random.random()
+        if rand < 0.2:
+            # Decrease cleanliness by 1
+            if shop.cleanliness - 1 < 0:
+                shop.change_cleanliness(0)
+            else:
+                shop.change_cleanliness(shop.cleanliness - 1)
+    for ev, prob in shop.probabilities.items():
         rand = random.random()
         if prob[0] > rand:
             prob[1](shop)
 
 
-def make_shops(shop_config):
+def make_shops(shop_config, probabilities):
     left_shop = Shop(
         shop_name="Shop on left",
         moneys=shop_config["moneys"],
         cleanliness=shop_config["cleanliness"],
         hygiene_score=shop_config["hygiene_score"],
+        probabilities=copy.deepcopy(probabilities),
     )
     right_shop = Shop(
         shop_name="Shop on right",
         moneys=shop_config["moneys"],
         cleanliness=shop_config["cleanliness"],
         hygiene_score=shop_config["hygiene_score"],
+        probabilities=copy.deepcopy(probabilities),
     )
     return (left_shop, right_shop)
 
@@ -56,10 +71,11 @@ def make_shops(shop_config):
 # print(left_shop)
 
 # Testing the event triggering
-shops = make_shops(config["shops"])
+shops = make_shops(config["shops"], config["probablities"])
 print(shops[0])
-for i in range(50):
+for i in range(100):
     print(f"Round {i}")
-    event_checks(shops[0], config["probablities"])
-    event_checks(shops[1], config["probablities"])
-print(shops[0])
+    event_checks(shops[0])
+    event_checks(shops[1])
+print(shops)
+print([shop.probabilities["customer"][0] for shop in shops])

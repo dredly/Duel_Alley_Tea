@@ -1,10 +1,13 @@
 class Shop:
-    def __init__(self, shop_name, moneys, cleanliness, hygiene_score):
+    def __init__(self, shop_name, moneys, cleanliness, hygiene_score, probabilities):
         self.shop_name = shop_name
         self.customer_satisfaction = []
         self.moneys = moneys
         self.cleanliness = cleanliness
         self.hygiene_score = hygiene_score
+        self.is_infested = False
+        self.is_cleaning = False
+        self.probabilities = probabilities
         self.img_file_names = {
             "cleanliness_overlay": f"cleanliness_level_{self.cleanliness}.png",
             "leak_overlay": None,
@@ -29,11 +32,15 @@ class Shop:
     def fix_leak(self):
         self.img_file_names["leak_overlay"] = None
 
-    def clean(self, clean_amount):
-        if self.cleanliness + clean_amount > 10:
-            self.change_cleanliness(10)
-        else:
-            self.change_cleanliness(self.cleanliness + clean_amount)
+    def start_cleaning(self):
+        is_cleaning = True
+
+    def stop_cleaning(self):
+        is_cleaning = False
+
+    def call_pest_control(self):
+        self.moneys -= 500
+        self.is_infested = False
 
     def avg_rating(self):
         if len(self.customer_satisfaction) == 0:
