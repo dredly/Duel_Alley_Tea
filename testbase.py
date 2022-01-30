@@ -11,9 +11,9 @@ config = {
         "hygiene_score": 5,
     },
     "probabilities": {
-        "leak": [0.03, leak],
-        "pests": [0.02, pests],
-        "inspector": [0.01, inspector],
+        "leak": [0.05, leak],
+        "pests": [0.05, pests],
+        "inspector": [0.7, inspector],
         "customer": [0.4, customer],
     },
     #1137, 427 - right
@@ -81,7 +81,7 @@ if  __name__ == "__main__":
     shops = make_shops(config["shops"], config["probabilities"])
     # print(shops[0])
     for i in range(100):
-        print(f"Round {i}")
+        # print(f"Round {i}")
         event_checks(shops[0])
         event_checks(shops[1])
     # print(shops)

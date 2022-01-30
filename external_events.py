@@ -26,7 +26,7 @@ def customer(shop):
     # random comment
     if not shop.is_cleaning:
         # print("Here comes a customer. Yay!")
-        shop.moneys += 2
+        shop.moneys += 10
         rand = random.random()
         # Chance of customer making the shop dirtier
         if rand < 0.2:

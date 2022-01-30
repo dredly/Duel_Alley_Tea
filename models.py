@@ -43,7 +43,7 @@ class Shop:
         self.moneys -= 200
 
     def start_cleaning(self):
-        print('Starting to Clean')
+        # print('Starting to Clean')
         self.is_cleaning = True
 
     def stop_cleaning(self):
@@ -58,7 +58,7 @@ class Shop:
 
 
     def call_pest_control(self):
-        self.moneys -= 500
+        self.moneys -= 200
         self.is_infested = False
         pygame.mixer.Sound.stop(self.rat_noise)
 

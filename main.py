@@ -19,7 +19,7 @@ mixer.music.load('Sounds\\Fight-o.mp3')
 mixer.music.set_volume(0.5)
 
 # play_rats = True
-mixer.music.play()
+mixer.music.play(-1)
 
 FPS = 60
 SPEED = 8
