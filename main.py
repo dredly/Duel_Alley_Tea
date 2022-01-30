@@ -5,6 +5,8 @@ from pygame.locals import (
     K_ESCAPE
 )
 
+app_start = False
+
 mixer.init()
 
 channel1 = pygame.mixer.Channel(0)
@@ -14,7 +16,7 @@ mixer.music.load('Sounds\\Fight-o.mp3')
 # rat_noise = mixer.Sound('Sounds\\pests_2.wav')
 # rat_noise_left = mixer.Sound('Sounds\\pests_1.wav')
 
-mixer.music.set_volume(0.5)
+mixer.music.set_volume(0.8)
 
 # play_rats = True
 mixer.music.play(-1)
@@ -378,115 +380,124 @@ if __name__ == '__main__':
     pygame.display.update()
 
     while running:
-        pygame.display.update()
-        for event in pygame.event.get():
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+        if app_start == False:
+            screen.blit(pygame.transform.smoothscale(pygame.image.load("Images\\startscreen.png").convert(), (1280, 720)), (0, 0))
+            for event in pygame.event.get():
+                if event.type == KEYDOWN:
+                    app_start = True
+            pygame.display.update()
+            FramePerSec.tick(FPS)
+
+        else:
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        running = False
+                    elif event.key == K_DOWN:
+                        if sink.rect_right.colliderect(player_right.rect):
+                            shops[1].start_cleaning()
+                    elif event.key == K_s:
+                        if sink.rect_left.colliderect(player_left.rect):
+                            shops[0].start_cleaning()
+                    elif event.key == K_w:
+                        if phone.rect_left.colliderect(player_left.rect):
+                            pygame.mixer.Sound.play(mixer.Sound('Sounds\\phone-calls.mp3'))
+                            shops[0].call_pest_control()
+                    elif event.key == K_UP:
+                        if phone.rect_right.colliderect(player_right.rect):
+                            pygame.mixer.Sound.play(mixer.Sound('Sounds\\phone-calls.mp3'))
+                            shops[1].call_pest_control()
+                    elif event.key == K_RCTRL:
+                        if sink.rect_right.colliderect(player_right.rect):
+                            shops[1].fix_leak()
+                    elif event.key == K_LCTRL:
+                        if sink.rect_left.colliderect(player_left.rect):
+                            shops[0].fix_leak()
+                    
+                elif event.type == KEYUP:
+                    if event.key == K_DOWN:
+                        shops[1].stop_cleaning()
+                    elif event.key == K_s:
+                        shops[0].stop_cleaning()
+                elif event.type == QUIT:
                     running = False
-                elif event.key == K_DOWN:
-                    if sink.rect_right.colliderect(player_right.rect):
-                        shops[1].start_cleaning()
-                elif event.key == K_s:
-                    if sink.rect_left.colliderect(player_left.rect):
-                        shops[0].start_cleaning()
-                elif event.key == K_w:
-                    if phone.rect_left.colliderect(player_left.rect):
-                        pygame.mixer.Sound.play(mixer.Sound('Sounds\\phone-calls.mp3'))
-                        shops[0].call_pest_control()
-                elif event.key == K_UP:
-                    if phone.rect_right.colliderect(player_right.rect):
-                        pygame.mixer.Sound.play(mixer.Sound('Sounds\\phone-calls.mp3'))
-                        shops[1].call_pest_control()
-                elif event.key == K_RCTRL:
-                    if sink.rect_right.colliderect(player_right.rect):
-                        shops[1].fix_leak()
-                elif event.key == K_LCTRL:
-                    if sink.rect_left.colliderect(player_left.rect):
-                        shops[0].fix_leak()
-                
-            elif event.type == KEYUP:
-                if event.key == K_DOWN:
-                    shops[1].stop_cleaning()
-                elif event.key == K_s:
-                    shops[0].stop_cleaning()
-            elif event.type == QUIT:
-                running = False
-        
-        check_time()
-        screen.fill(BLACK)
-        screen.blit(pygame.transform.smoothscale(pygame.image.load("Images\\backgroundtest6.png").convert(), (1280, 720)), (0, 0))
-        floor.draw(screen)
-        front_wall.draw(screen)
-        back_wall.draw(screen)
-        sink.draw(screen)
-        phone.draw(screen)
-        cashregister.draw(screen)
-        if shops[1].leaking:
-            sink.leak_right(screen)
-        if shops[0].leaking:
-            sink.leak_left(screen)  
-        if shops[0].is_infested:
-            rat_left.update_left()
-            rat_left.draw(screen)
-        if shops[1].is_infested:
-            rat_right.update_right()
-            rat_right.draw(screen)
-        if shops[0].has_customer == True:
-            if customer_animation_counter_left + 1 <= FPS//2:
-                customer_left.draw_left(screen)
-                customer_animation_counter_left += 1
-            else:
-                customer_animation_counter_left = 0
-                shops[0].has_customer = False
+            
+            check_time()
+            screen.fill(BLACK)
+            screen.blit(pygame.transform.smoothscale(pygame.image.load("Images\\backgroundtest6.png").convert(), (1280, 720)), (0, 0))
+            floor.draw(screen)
+            front_wall.draw(screen)
+            back_wall.draw(screen)
+            sink.draw(screen)
+            phone.draw(screen)
+            cashregister.draw(screen)
+            if shops[1].leaking:
+                sink.leak_right(screen)
+            if shops[0].leaking:
+                sink.leak_left(screen)  
+            if shops[0].is_infested:
+                rat_left.update_left()
+                rat_left.draw(screen)
+            if shops[1].is_infested:
+                rat_right.update_right()
+                rat_right.draw(screen)
+            if shops[0].has_customer == True:
+                if customer_animation_counter_left + 1 <= FPS//2:
+                    customer_left.draw_left(screen)
+                    customer_animation_counter_left += 1
+                else:
+                    customer_animation_counter_left = 0
+                    shops[0].has_customer = False
 
-        if shops[1].has_customer == True:
-            if customer_animation_counter_right + 1 <= FPS//2:
-                customer_right.draw_right(screen)
-                customer_animation_counter_right += 1
-            else:
-                customer_animation_counter_right = 0
-                shops[1].has_customer = False
+            if shops[1].has_customer == True:
+                if customer_animation_counter_right + 1 <= FPS//2:
+                    customer_right.draw_right(screen)
+                    customer_animation_counter_right += 1
+                else:
+                    customer_animation_counter_right = 0
+                    shops[1].has_customer = False
 
 
 
-        screen.blit(pygame.image.load(shops[1].img_file_names["cleanliness_overlay"]), (757, 284))
-        screen.blit(pygame.image.load(shops[0].img_file_names["cleanliness_overlay"]), (-263, 284))
-        hygiene_rating_1 = pygame.transform.smoothscale(pygame.image.load(shops[1].img_file_names["hygiene_score_image"]), (120, 80))
-        screen.blit(hygiene_rating_1, (700, 240))
-        hygiene_rating_0 = pygame.transform.smoothscale(pygame.image.load(shops[0].img_file_names["hygiene_score_image"]), (120, 80))
-        screen.blit(hygiene_rating_0, (460, 240))
-        shop_1_money = myFont.render(f"Moneys: {shops[0].moneys}", False, (0, 0, 0))
-        screen.blit(shop_1_money, (10, 230))
-        shop_2_money = myFont.render(f"Moneys: {shops[1].moneys}", False, (0, 0, 0))
-        screen.blit(shop_2_money, (1133, 230))
-        player_left.update_left()
-        player_right.update_right()
-        
-        # Exceptions
-        if not floor.rect_left.colliderect(player_left.rect):
-            player_left.rect.move_ip(0, 3)
-        if not floor.rect_right.colliderect(player_right.rect):
-            player_right.rect.move_ip(0, 3)
-        if front_wall.rect_left.colliderect(player_left.rect):
-            player_left.rect.move_ip(-SPEED, 0)
-        if front_wall.rect_right.colliderect(player_right.rect):
-            player_right.rect.move_ip(SPEED, 0)
-        if back_wall.rect_left.colliderect(player_left.rect):
-            player_left.rect.move_ip(SPEED, 0)
-        if back_wall.rect_right.colliderect(player_right.rect):
-            player_right.rect.move_ip(-SPEED, 0)
-        if back_wall.rect_right.colliderect(rat_right.rect):
-            rat_right.looking = 'left'
-        if back_wall.rect_left.colliderect(rat_left.rect):
-            rat_left.looking = 'right'
-        if front_wall.rect_left.colliderect(rat_left.rect.inflate(65, 0)):
-            rat_left.looking = 'left'
-        if front_wall.rect_right.colliderect(rat_right.rect.inflate(65, 0)):
-            rat_right.looking = 'right'
+            screen.blit(pygame.image.load(shops[1].img_file_names["cleanliness_overlay"]), (757, 284))
+            screen.blit(pygame.image.load(shops[0].img_file_names["cleanliness_overlay"]), (-263, 284))
+            hygiene_rating_1 = pygame.transform.smoothscale(pygame.image.load(shops[1].img_file_names["hygiene_score_image"]), (120, 80))
+            screen.blit(hygiene_rating_1, (700, 240))
+            hygiene_rating_0 = pygame.transform.smoothscale(pygame.image.load(shops[0].img_file_names["hygiene_score_image"]), (120, 80))
+            screen.blit(hygiene_rating_0, (460, 240))
+            shop_1_money = myFont.render(f"Moneys: {shops[0].moneys}", False, (0, 0, 0))
+            screen.blit(shop_1_money, (10, 230))
+            shop_2_money = myFont.render(f"Moneys: {shops[1].moneys}", False, (0, 0, 0))
+            screen.blit(shop_2_money, (1133, 230))
+            player_left.update_left()
+            player_right.update_right()
+            
+            # Exceptions
+            if not floor.rect_left.colliderect(player_left.rect):
+                player_left.rect.move_ip(0, 3)
+            if not floor.rect_right.colliderect(player_right.rect):
+                player_right.rect.move_ip(0, 3)
+            if front_wall.rect_left.colliderect(player_left.rect):
+                player_left.rect.move_ip(-SPEED, 0)
+            if front_wall.rect_right.colliderect(player_right.rect):
+                player_right.rect.move_ip(SPEED, 0)
+            if back_wall.rect_left.colliderect(player_left.rect):
+                player_left.rect.move_ip(SPEED, 0)
+            if back_wall.rect_right.colliderect(player_right.rect):
+                player_right.rect.move_ip(-SPEED, 0)
+            if back_wall.rect_right.colliderect(rat_right.rect):
+                rat_right.looking = 'left'
+            if back_wall.rect_left.colliderect(rat_left.rect):
+                rat_left.looking = 'right'
+            if front_wall.rect_left.colliderect(rat_left.rect.inflate(65, 0)):
+                rat_left.looking = 'left'
+            if front_wall.rect_right.colliderect(rat_right.rect.inflate(65, 0)):
+                rat_right.looking = 'right'
 
 
-        player_left.draw_left(screen)
-        player_right.draw_right(screen)
+            player_left.draw_left(screen)
+            player_right.draw_right(screen)
 
-        pygame.display.update()
-        FramePerSec.tick(FPS)
+            pygame.display.update()
+            FramePerSec.tick(FPS)
