@@ -15,6 +15,7 @@ class Shop:
         self.is_cleaning = False
         self.leaking = False
         self.probabilities = probabilities
+        self.has_customer = False
         self.img_file_names = {
             "cleanliness_overlay": f"so_called_art\\pngs\\cleanliness_level_{self.cleanliness}.png",
             "leak_overlay": None,

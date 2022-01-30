@@ -25,6 +25,7 @@ def inspector(shop):
 def customer(shop):
     # random comment
     if not shop.is_cleaning:
+        shop.has_customer = True
         # print("Here comes a customer. Yay!")
         shop.moneys += 10
         rand = random.random()

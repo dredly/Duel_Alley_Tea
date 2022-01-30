@@ -14,7 +14,7 @@ config = {
         "leak": [0.05, leak],
         "pests": [0.05, pests],
         "inspector": [0.7, inspector],
-        "customer": [0.4, customer],
+        "customer": [0.9, customer],
     },
     #1137, 427 - right
 

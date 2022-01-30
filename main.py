@@ -1,6 +1,4 @@
-from turtle import left
 import pygame
-from external_events import leak
 from testbase import config, make_shops, event_checks
 from pygame import K_DOWN, K_LCTRL, K_LEFT, K_RCTRL, K_RIGHT, K_UP, KEYDOWN, KEYUP, QUIT, K_a, K_d, K_s, K_w, mixer
 from pygame.locals import (
@@ -34,6 +32,8 @@ walk_count_left = 0
 walk_count_right = 0
 rat_count_left = 0
 rat_count_right = 0
+customer_left_count = 0
+customer_right_count = 0
 leak_count = 0
 
 class Sink(pygame.sprite.Sprite):
@@ -192,6 +192,58 @@ class BackWall(pygame.sprite.Sprite):
         surface.blit(self.surf_right, self.rect_right)
 
 
+class Customer(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Customer, self).__init__()
+        self.transform = (300, 300)
+        customer_right_2 = pygame.transform.scale(pygame.image.load("Images\\customer-2.png"), self.transform)
+        customer_right_3 = pygame.transform.scale(pygame.image.load("Images\\customer-3.png"), self.transform)
+        customer_right_4 = pygame.transform.scale(pygame.image.load("Images\\customer-4.png"), self.transform)
+        customer_right_5 = pygame.transform.scale(pygame.image.load("Images\\customer-5.png"), self.transform)
+        customer_right_6 = pygame.transform.scale(pygame.image.load("Images\\customer-6.png"), self.transform)
+        customer_right_7 = pygame.transform.scale(pygame.image.load("Images\\customer-7.png"), self.transform)
+        customer_right_8 = pygame.transform.scale(pygame.image.load("Images\\customer-8.png"), self.transform)
+        customer_right_9 = pygame.transform.scale(pygame.image.load("Images\\customer-9.png"), self.transform)
+        customer_right_10 = pygame.transform.scale(pygame.image.load("Images\\customer-10.png"), self.transform)
+
+        customer_left_2 = pygame.transform.scale(pygame.transform.flip(pygame.image.load("Images\\customer-2.png"), True, False), self.transform)
+        customer_left_3 = pygame.transform.scale(pygame.transform.flip(pygame.image.load("Images\\customer-3.png"), True, False), self.transform)
+        customer_left_4 = pygame.transform.scale(pygame.transform.flip(pygame.image.load("Images\\customer-4.png"), True, False), self.transform)
+        customer_left_5 = pygame.transform.scale(pygame.transform.flip(pygame.image.load("Images\\customer-5.png"), True, False), self.transform)
+        customer_left_6 = pygame.transform.scale(pygame.transform.flip(pygame.image.load("Images\\customer-6.png"), True, False), self.transform)
+        customer_left_7 = pygame.transform.scale(pygame.transform.flip(pygame.image.load("Images\\customer-7.png"), True, False), self.transform)
+        customer_left_8 = pygame.transform.scale(pygame.transform.flip(pygame.image.load("Images\\customer-8.png"), True, False), self.transform)
+        customer_left_9 = pygame.transform.scale(pygame.transform.flip(pygame.image.load("Images\\customer-9.png"), True, False), self.transform)
+        customer_left_10 = pygame.transform.scale(pygame.transform.flip(pygame.image.load("Images\\customer-10.png"), True, False), self.transform)
+
+        self.customer_left_wave = [customer_left_2, customer_left_3, customer_left_4, customer_left_5, customer_left_6, customer_left_7, customer_left_8, customer_left_9]
+        self.customer_right_wave = [customer_right_2, customer_right_3, customer_right_4, customer_right_5, customer_right_6, customer_right_7, customer_right_8, customer_right_9]
+        self.rect = customer_left_2.get_rect()
+
+    def place_left(self):
+        self.rect.move_ip(435, 470)
+
+    def place_right(self):
+        self.rect.move_ip(530, 440)
+
+    def draw_left(self, surface):
+        global customer_left_count
+
+        if customer_left_count + 1 > FPS//2:
+            customer_left_count = 0
+
+        surface.blit(self.customer_left_wave[int(customer_left_count//3.75)], self.rect)
+        customer_left_count += 1
+
+    def draw_right(self, surface):
+        global customer_right_count
+
+        if customer_right_count + 1 > FPS//2:
+            customer_right_count = 0
+
+        surface.blit(self.customer_right_wave[int(customer_right_count//3.75)], self.rect)
+        customer_right_count += 1
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player, self).__init__()
@@ -293,6 +345,8 @@ if __name__ == '__main__':
 
     shops = make_shops(config["shops"], config["probabilities"])
     
+    customer_animation_counter_right = 0
+    customer_animation_counter_left = 0
     player_left = Player()
     player_left.place_left()
     player_right = Player()
@@ -307,6 +361,10 @@ if __name__ == '__main__':
     rat_left.place_left()
     rat_right = Rats()
     rat_right.place_right()
+    customer_left = Customer()
+    customer_left.place_left()
+    customer_right = Customer()
+    customer_right.place_right()
     frame_count = 0
 
     def check_time():
@@ -373,22 +431,23 @@ if __name__ == '__main__':
         if shops[1].is_infested:
             rat_right.update_right()
             rat_right.draw(screen)
-        # if shops[1].is_infested:
-        #     if play_rats == True:
-        #         pygame.mixer.Sound.play(rat_noise, -1)
-        #         play_rats = False
-        # else:
-        #     if play_rats == False:
-        #         pygame.mixer.Sound.play(rat_noise)
-        #         play_rats = True
-        # if shops[0].is_infested:
-        #     if play_rats == True:
-        #         pygame.mixer.Sound.play(rat_noise_left, -1)
-        #         play_rats = False
-        # else:
-        #     if play_rats == False:
-        #         pygame.mixer.Sound.play(rat_noise_left)
-        #         play_rats = True
+        if shops[0].has_customer == True:
+            if customer_animation_counter_left + 1 <= FPS//2:
+                customer_left.draw_left(screen)
+                customer_animation_counter_left += 1
+            else:
+                customer_animation_counter_left = 0
+                shops[0].has_customer = False
+
+        if shops[1].has_customer == True:
+            if customer_animation_counter_right + 1 <= FPS//2:
+                customer_right.draw_right(screen)
+                customer_animation_counter_right += 1
+            else:
+                customer_animation_counter_right = 0
+                shops[1].has_customer = False
+
+
 
         screen.blit(pygame.image.load(shops[1].img_file_names["cleanliness_overlay"]), (757, 284))
         screen.blit(pygame.image.load(shops[0].img_file_names["cleanliness_overlay"]), (-263, 284))
@@ -403,12 +462,6 @@ if __name__ == '__main__':
         player_left.update_left()
         player_right.update_right()
         
-        #Interactions
-        if sink.rect_left.colliderect(player_left.rect):
-            pass
-        if sink.rect_right.colliderect(player_right.rect):
-            pass
-
         # Exceptions
         if not floor.rect_left.colliderect(player_left.rect):
             player_left.rect.move_ip(0, 3)
