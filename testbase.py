@@ -50,6 +50,8 @@ def make_shops(shop_config, probabilities):
         hygiene_score=shop_config["hygiene_score"],
         probabilities=copy.deepcopy(probabilities),
     )
+    # left_shop.pest_soundfile = "Sounds\\pests_1.wav"
+    # left_shop.make_rat_noise()
     right_shop = Shop(
         shop_name="Shop on right",
         moneys=shop_config["moneys"],
@@ -57,6 +59,8 @@ def make_shops(shop_config, probabilities):
         hygiene_score=shop_config["hygiene_score"],
         probabilities=copy.deepcopy(probabilities),
     )
+    # right_shop.pest_soundfile = "Sounds\\pests_2.wav"
+    # right_shop.make_rat_noise()
     return (left_shop, right_shop)
 
 

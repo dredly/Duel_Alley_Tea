@@ -1,3 +1,9 @@
+import pygame
+from pygame import mixer
+
+
+mixer.init()
+
 class Shop:
     def __init__(self, shop_name, moneys, cleanliness, hygiene_score, probabilities):
         self.shop_name = shop_name
@@ -13,7 +19,7 @@ class Shop:
             "cleanliness_overlay": f"so_called_art\\pngs\\cleanliness_level_{self.cleanliness}.png",
             "leak_overlay": None,
             "hygiene_score_image": f"so_called_art\\pngs\\hygiene_rating_{self.hygiene_score}.png",
-        }
+        },
 
     def change_cleanliness(self, new_val):
         self.cleanliness = new_val
@@ -43,9 +49,18 @@ class Shop:
     def stop_cleaning(self):
         self.is_cleaning = False
 
+    # def make_rat_noise(self):
+    #     self.rat_noise = mixer.Sound(self.pest_soundfile)
+
+    def infest(self):
+        self.is_infested = True
+        
+
+
     def call_pest_control(self):
         self.moneys -= 500
         self.is_infested = False
+        
 
     def avg_rating(self):
         if len(self.customer_satisfaction) == 0:

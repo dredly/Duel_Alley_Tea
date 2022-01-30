@@ -1,3 +1,4 @@
+
 import random
 
 
@@ -12,7 +13,7 @@ def leak(shop):
 
 def pests(shop):
     # Decrease cleanliness by 4
-    shop.is_infested = True
+    shop.infest()
     # print("THE RATS ARE COMING")
 
 
