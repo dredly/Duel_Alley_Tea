@@ -37,11 +37,13 @@ class Shop:
         # print("UPDATING HYGIENE SCORE")
 
     def leak(self):
+        pygame.mixer.Sound.play(self.leak_noise, -1)
         self.leaking = True
 
     def fix_leak(self):
         self.leaking = False
         self.moneys -= 200
+        pygame.mixer.Sound.stop(self.leak_noise)
 
     def start_cleaning(self):
         # print('Starting to Clean')
@@ -52,6 +54,9 @@ class Shop:
 
     def make_rat_noise(self):
         self.rat_noise = mixer.Sound(self.pest_soundfile)
+
+    def make_leak_noise(self):
+        self.leak_noise = mixer.Sound(self.leak_soundfile)
     
     def infest(self):
         self.is_infested = True

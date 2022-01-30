@@ -14,7 +14,7 @@ config = {
         "leak": [0.05, leak],
         "pests": [0.05, pests],
         "inspector": [0.7, inspector],
-        "customer": [0.9, customer],
+        "customer": [0.4, customer],
     },
     #1137, 427 - right
 
@@ -52,6 +52,8 @@ def make_shops(shop_config, probabilities):
     )
     left_shop.pest_soundfile = "Sounds\\pests_1.wav"
     left_shop.make_rat_noise()
+    left_shop.leak_soundfile = "Sounds\\leak.wav"
+    left_shop.make_leak_noise()
     right_shop = Shop(
         shop_name="Shop on right",
         moneys=shop_config["moneys"],
@@ -61,6 +63,8 @@ def make_shops(shop_config, probabilities):
     )
     right_shop.pest_soundfile = "Sounds\\pests_2.wav"
     right_shop.make_rat_noise()
+    right_shop.leak_soundfile = "Sounds\\leak.wav"
+    right_shop.make_leak_noise()
     return (left_shop, right_shop)
 
 
