@@ -333,6 +333,7 @@ if __name__ == '__main__':
                         shops[0].start_cleaning()
                 elif event.key == K_w:
                     if phone.rect_left.colliderect(player_left.rect):
+                        pygame.mixer.Sound.play(mixer.Sound('Sounds\\phone-calls.mp3'))
                         shops[0].call_pest_control()
                 elif event.key == K_UP:
                     if phone.rect_right.colliderect(player_right.rect):
