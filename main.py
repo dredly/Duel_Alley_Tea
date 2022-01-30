@@ -12,13 +12,13 @@ channel1 = pygame.mixer.Channel(0)
 
 mixer.music.load('Sounds\\Fight-o.mp3')
 
-rat_noise = mixer.Sound('Sounds\\pests_2.wav')
-rat_noise_left = mixer.Sound('Sounds\\pests_1.wav')
+# rat_noise = mixer.Sound('Sounds\\pests_2.wav')
+# rat_noise_left = mixer.Sound('Sounds\\pests_1.wav')
 
 mixer.music.set_volume(0.5)
 
-play_rats = True
-# mixer.music.play()
+# play_rats = True
+mixer.music.play()
 
 FPS = 60
 SPEED = 8
@@ -315,22 +315,22 @@ if __name__ == '__main__':
             sink.leak_right(screen)
         if shops[0].leaking:
             sink.leak_left(screen)   
-        if shops[1].is_infested:
-            if play_rats == True:
-                pygame.mixer.Sound.play(rat_noise, -1)
-                play_rats = False
-        else:
-            if play_rats == False:
-                pygame.mixer.Sound.play(rat_noise)
-                play_rats = True
-        if shops[0].is_infested:
-            if play_rats == True:
-                pygame.mixer.Sound.play(rat_noise_left, -1)
-                play_rats = False
-        else:
-            if play_rats == False:
-                pygame.mixer.Sound.play(rat_noise_left)
-                play_rats = True
+        # if shops[1].is_infested:
+        #     if play_rats == True:
+        #         pygame.mixer.Sound.play(rat_noise, -1)
+        #         play_rats = False
+        # else:
+        #     if play_rats == False:
+        #         pygame.mixer.Sound.play(rat_noise)
+        #         play_rats = True
+        # if shops[0].is_infested:
+        #     if play_rats == True:
+        #         pygame.mixer.Sound.play(rat_noise_left, -1)
+        #         play_rats = False
+        # else:
+        #     if play_rats == False:
+        #         pygame.mixer.Sound.play(rat_noise_left)
+        #         play_rats = True
 
         screen.blit(pygame.image.load(shops[1].img_file_names["cleanliness_overlay"]), (757, 284))
         screen.blit(pygame.image.load(shops[0].img_file_names["cleanliness_overlay"]), (-263, 284))

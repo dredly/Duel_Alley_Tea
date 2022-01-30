@@ -19,7 +19,7 @@ class Shop:
             "cleanliness_overlay": f"so_called_art\\pngs\\cleanliness_level_{self.cleanliness}.png",
             "leak_overlay": None,
             "hygiene_score_image": f"so_called_art\\pngs\\hygiene_rating_{self.hygiene_score}.png",
-        },
+        }
 
     def change_cleanliness(self, new_val):
         self.cleanliness = new_val
@@ -49,18 +49,18 @@ class Shop:
     def stop_cleaning(self):
         self.is_cleaning = False
 
-    # def make_rat_noise(self):
-    #     self.rat_noise = mixer.Sound(self.pest_soundfile)
+    def make_rat_noise(self):
+        self.rat_noise = mixer.Sound(self.pest_soundfile)
 
     def infest(self):
         self.is_infested = True
-        
+        pygame.mixer.Sound.play(self.rat_noise, -1)
 
 
     def call_pest_control(self):
         self.moneys -= 500
         self.is_infested = False
-        
+        pygame.mixer.Sound.stop(self.rat_noise)
 
     def avg_rating(self):
         if len(self.customer_satisfaction) == 0:
