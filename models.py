@@ -51,7 +51,7 @@ class Shop:
 
     def make_rat_noise(self):
         self.rat_noise = mixer.Sound(self.pest_soundfile)
-
+    
     def infest(self):
         self.is_infested = True
         pygame.mixer.Sound.play(self.rat_noise, -1)
