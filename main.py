@@ -1,3 +1,4 @@
+from turtle import left
 import pygame
 from external_events import leak
 from testbase import config, make_shops, event_checks
@@ -31,6 +32,8 @@ SCREEN_HEIGHT = 720
 
 walk_count_left = 0
 walk_count_right = 0
+rat_count_left = 0
+rat_count_right = 0
 leak_count = 0
 
 class Sink(pygame.sprite.Sprite):
@@ -114,6 +117,49 @@ class Floor(pygame.sprite.Sprite):
     def draw(self, surface):
         surface.blit(self.surf_left, self.rect_left)
         surface.blit(self.surf_right, self.rect_right)
+
+
+class Rats(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Rats, self).__init__()
+        rat_1 = pygame.image.load("Images\\rat-1.png")
+        rat_2 = pygame.image.load("Images\\rat-2.png")
+        rat_1_right = pygame.transform.flip(pygame.image.load("Images\\rat-1.png"), True, False)
+        rat_2_right = pygame.transform.flip(pygame.image.load("Images\\rat-2.png"), True, False)
+        self.run = [rat_1, rat_2, rat_1, rat_2, rat_1, rat_2, rat_1, rat_2]
+        self.run_right = [rat_1_right, rat_2_right, rat_1_right, rat_2_right, rat_1_right, rat_2_right, rat_1_right, rat_2_right]
+        self.rect = rat_1.get_rect()
+        self.looking = 'right'
+
+    def place_right(self):
+        self.rect.move_ip(800,600)
+
+    def place_left(self):
+        self.rect.move_ip(500, 600)
+
+    def update_right(self):
+        if self.looking == 'left':
+            self.rect.move_ip(-8, 0)
+        else:
+            self.rect.move_ip(8, 0)
+
+    def update_left(self):
+        if self.looking == 'left':
+            self.rect.move_ip(-8, 0)
+        else:
+            self.rect.move_ip(8, 0)
+
+    def draw(self, surface):
+        global rat_count_right
+        if rat_count_right + 1 >= FPS:
+            rat_count_right = 0
+
+        if self.looking == 'right':
+            surface.blit(self.run[int(rat_count_right//7.5)], self.rect)
+            rat_count_right += 1
+        else:
+            surface.blit(self.run_right[int(rat_count_right//7.5)], self.rect)
+            rat_count_right += 1
 
 
 class FrontWall(pygame.sprite.Sprite):
@@ -257,6 +303,10 @@ if __name__ == '__main__':
     cashregister = CashRegister()
     front_wall = FrontWall()
     back_wall = BackWall()
+    rat_left = Rats()
+    rat_left.place_left()
+    rat_right = Rats()
+    rat_right.place_right()
     frame_count = 0
 
     def check_time():
@@ -314,7 +364,13 @@ if __name__ == '__main__':
         if shops[1].leaking:
             sink.leak_right(screen)
         if shops[0].leaking:
-            sink.leak_left(screen)   
+            sink.leak_left(screen)  
+        if shops[0].is_infested:
+            rat_left.update_left()
+            rat_left.draw(screen)
+        if shops[1].is_infested:
+            rat_right.update_right()
+            rat_right.draw(screen)
         # if shops[1].is_infested:
         #     if play_rats == True:
         #         pygame.mixer.Sound.play(rat_noise, -1)
@@ -364,6 +420,16 @@ if __name__ == '__main__':
             player_left.rect.move_ip(SPEED, 0)
         if back_wall.rect_right.colliderect(player_right.rect):
             player_right.rect.move_ip(-SPEED, 0)
+        if back_wall.rect_right.colliderect(rat_right.rect):
+            rat_right.looking = 'left'
+        if back_wall.rect_left.colliderect(rat_left.rect):
+            rat_left.looking = 'right'
+        if front_wall.rect_left.colliderect(rat_left.rect.inflate(65, 0)):
+            rat_left.looking = 'left'
+        if front_wall.rect_right.colliderect(rat_right.rect.inflate(65, 0)):
+            rat_right.looking = 'right'
+
+
         player_left.draw_left(screen)
         player_right.draw_right(screen)
 
